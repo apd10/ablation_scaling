@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ablations Plot Explorer</title>
+  <link rel="stylesheet" href="/static/style.css?v=3" />
+</head>
+<body>
+  <div class="layout">
+    <header>
+      <h1>Ablations Plot Explorer</h1>
+      <p class="subtitle">Survey scatter plots with optional piecewise fits</p>
+    </header>
+
+    <aside class="panel">
+      <section>
+        <h2>Axes</h2>
+        <label>
+          X axis
+          <select id="x-col"></select>
+        </label>
+        <label>
+          Y axis
+          <select id="y-col"></select>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" id="log-x" />
+          Log scale on X
+        </label>
+      </section>
+
+      <section>
+        <h2>Outliers</h2>
+        <label class="checkbox">
+          <input type="checkbox" id="remove-survey-clusters" />
+          Survey clusters (3 Nemotron / DeepSeek points, 8 rows)
+        </label>
+        <label>
+          Remove highest X (count)
+          <input type="number" id="outlier-n-remove-x" min="0" step="1" value="0" />
+        </label>
+        <label>
+          Remove highest Y after X (count)
+          <input type="number" id="outlier-n-remove-y" min="0" step="1" value="0" />
+        </label>
+      </section>
+
+      <section>
+        <h2>Fit search space</h2>
+        <p class="hint">Used when piecewise fit is enabled; best k + family is chosen by lowest MSE.</p>
+        <fieldset>
+          <legend>k-means num fits</legend>
+          <label class="checkbox"><input type="checkbox" class="k-opt" value="1" /> 1</label>
+          <label class="checkbox"><input type="checkbox" class="k-opt" value="2" checked /> 2</label>
+          <label class="checkbox"><input type="checkbox" class="k-opt" value="3" checked /> 3</label>
+          <label class="checkbox"><input type="checkbox" class="k-opt" value="4" /> 4</label>
+          <label class="checkbox"><input type="checkbox" class="k-opt" value="5" /> 5</label>
+        </fieldset>
+        <fieldset>
+          <legend>Function family</legend>
+          <label class="checkbox"><input type="checkbox" class="family-opt" value="linear" checked /> linear</label>
+          <label class="checkbox"><input type="checkbox" class="family-opt" value="log" checked /> log</label>
+          <label class="checkbox"><input type="checkbox" class="family-opt" value="sqrt" checked /> sqrt</label>
+        </fieldset>
+      </section>
+
+      <section>
+        <h2>Piecewise fit</h2>
+        <label class="checkbox">
+          <input type="checkbox" id="enable-fit" />
+          Enable k-means line fits
+        </label>
+        <div id="fit-options" class="fit-options hidden">
+          <label>
+            Anchor X (optional)
+            <input type="number" id="anchor-x" step="any" placeholder="e.g. 0.1" />
+          </label>
+          <label>
+            Anchor Y (optional)
+            <input type="number" id="anchor-y" step="any" placeholder="e.g. 1" />
+          </label>
+        </div>
+      </section>
+
+      <div class="actions">
+        <button id="plot-btn" type="button">Generate plot</button>
+        <button id="export-btn" type="button" class="secondary">Export Python</button>
+      </div>
+      <p id="status" class="status"></p>
+      <pre id="meta" class="meta hidden"></pre>
+    </aside>
+
+    <main class="plot-area">
+      <div id="placeholder" class="placeholder">Choose X and Y, then click Generate plot.</div>
+      <img id="plot-image" alt="Plot" class="hidden" />
+    </main>
+  </div>
+
+  <div id="export-modal" class="export-modal hidden" aria-hidden="true">
+    <div class="export-modal-backdrop" data-close-export></div>
+    <div class="export-modal-panel" role="dialog" aria-labelledby="export-modal-title">
+      <div class="export-modal-header">
+        <h2 id="export-modal-title">Export Python</h2>
+        <button type="button" class="export-modal-close" data-close-export aria-label="Close">&times;</button>
+      </div>
+      <p class="export-modal-hint">Copy and paste into your project. Includes named functions and a <code>FUNCTIONS</code> dict.</p>
+      <textarea id="export-code" class="export-code" readonly spellcheck="false"></textarea>
+      <div class="export-modal-actions">
+        <button type="button" id="copy-export-btn">Copy to clipboard</button>
+        <button type="button" class="secondary" data-close-export>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js?v=4"></script>
+</body>
+</html>

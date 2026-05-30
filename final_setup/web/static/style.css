@@ -1,0 +1,313 @@
+:root {
+  color-scheme: light dark;
+  --bg: #0f1419;
+  --panel: #1a2332;
+  --text: #e7ecf3;
+  --muted: #9aa7b8;
+  --accent: #3b82f6;
+  --border: #2d3a4d;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: 100vh;
+}
+
+header {
+  grid-column: 1 / -1;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.4rem;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.panel {
+  padding: 1rem 1.25rem 2rem;
+  border-right: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.panel section {
+  margin-bottom: 1.25rem;
+}
+
+.panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.hint {
+  margin: -0.35rem 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 0.92rem;
+}
+
+select, input[type="number"] {
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox input {
+  width: auto;
+  margin: 0;
+}
+
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+
+legend {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+#plot-btn {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#plot-btn:hover { filter: brightness(1.08); }
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#export-btn.secondary {
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+#export-btn.secondary:hover:not(:disabled) {
+  background: var(--bg);
+}
+
+#export-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  min-height: 1.2rem;
+}
+
+.meta {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.plot-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.placeholder {
+  color: var(--muted);
+  text-align: center;
+  max-width: 28rem;
+  line-height: 1.5;
+}
+
+#plot-image {
+  max-width: 100%;
+  max-height: calc(100vh - 6rem);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.hidden { display: none !important; }
+
+.fit-options.hidden { display: none; }
+
+.export-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.export-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.export-modal-panel {
+  position: relative;
+  width: min(720px, 100%);
+  max-height: min(85vh, 900px);
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.export-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.export-modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--text);
+}
+
+.export-modal-close {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+
+.export-modal-close:hover {
+  color: var(--text);
+}
+
+.export-modal-hint {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.export-modal-hint code {
+  font-size: 0.85em;
+}
+
+.export-code {
+  flex: 1;
+  min-height: 280px;
+  max-height: 55vh;
+  margin: 0;
+  padding: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  resize: vertical;
+  white-space: pre;
+  overflow: auto;
+}
+
+.export-modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.export-modal-actions button {
+  flex: 1;
+  padding: 0.65rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.export-modal-actions button.secondary {
+  flex: 0 0 auto;
+  min-width: 5.5rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+.export-modal-actions button:hover {
+  filter: brightness(1.08);
+}
+
+.export-modal-actions button.secondary:hover {
+  filter: none;
+  background: var(--bg);
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .panel { border-right: none; border-bottom: 1px solid var(--border); }
+}
