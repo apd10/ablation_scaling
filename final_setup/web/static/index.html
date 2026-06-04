@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ablations Plot Explorer</title>
-  <link rel="stylesheet" href="/static/style.css?v=3" />
+  <link rel="stylesheet" href="/static/style.css?v=4" />
 </head>
 <body>
   <div class="layout">
@@ -93,7 +93,16 @@
 
     <main class="plot-area">
       <div id="placeholder" class="placeholder">Choose X and Y, then click Generate plot.</div>
-      <img id="plot-image" alt="Plot" class="hidden" />
+      <div id="plot-content" class="plot-content hidden">
+        <img id="plot-image" alt="Plot" />
+        <section id="prediction-table-section" class="prediction-table-section hidden">
+          <h2>Fit values (exponential X grid)</h2>
+          <p class="hint">X from min to max of fit data; one Y column per piecewise line (low → high slope).</p>
+          <div class="table-wrap">
+            <table id="prediction-table" class="prediction-table"></table>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 
@@ -113,6 +122,6 @@
     </div>
   </div>
 
-  <script src="/static/app.js?v=4"></script>
+  <script src="/static/app.js?v=5"></script>
 </body>
 </html>

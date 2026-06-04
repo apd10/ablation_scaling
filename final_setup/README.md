@@ -21,7 +21,8 @@ Open **http://127.0.0.1:8765**. Stop with **Ctrl+C**. Hard-refresh (**Ctrl+F5**)
 3. Check which **k** values and **function families** to try.
 4. Enable **piecewise fit** (and anchor if needed).
 5. Click **Generate plot**.
-6. Click **Export Python** to copy code into your project.
+6. With fit enabled, a **table** below the plot lists exponentially spaced X over the data range and Y per line.
+7. Click **Export Python** to copy code into your project.
 
 Fit metadata (chosen k, family, MSE) appears under the buttons after a plot with fit enabled.
 

@@ -7,8 +7,11 @@ const plotBtn = document.getElementById("plot-btn");
 const exportBtn = document.getElementById("export-btn");
 const statusEl = document.getElementById("status");
 const metaEl = document.getElementById("meta");
+const plotContent = document.getElementById("plot-content");
 const plotImage = document.getElementById("plot-image");
 const placeholder = document.getElementById("placeholder");
+const predictionTableSection = document.getElementById("prediction-table-section");
+const predictionTable = document.getElementById("prediction-table");
 const exportModal = document.getElementById("export-modal");
 const exportCode = document.getElementById("export-code");
 const copyExportBtn = document.getElementById("copy-export-btn");
@@ -87,6 +90,34 @@ function updateExportButton() {
   exportBtn.disabled = !enableFit.checked;
 }
 
+function formatTableNumber(value) {
+  if (!Number.isFinite(value)) return "—";
+  const abs = Math.abs(value);
+  if (abs >= 1000 || (abs > 0 && abs < 0.01)) return value.toExponential(4);
+  if (abs >= 100) return value.toFixed(2);
+  if (abs >= 1) return value.toFixed(4);
+  return value.toPrecision(4);
+}
+
+function renderPredictionTable(table) {
+  if (!table?.rows?.length) {
+    predictionTableSection.classList.add("hidden");
+    predictionTable.innerHTML = "";
+    return;
+  }
+
+  const headers = [table.x_col, ...table.y_columns];
+  const thead = `<thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead>`;
+  const bodyRows = table.rows
+    .map((row) => {
+      const cells = [row.x, ...table.y_columns.map((col) => row[col])];
+      return `<tr>${cells.map((v) => `<td>${formatTableNumber(v)}</td>`).join("")}</tr>`;
+    })
+    .join("");
+  predictionTable.innerHTML = `${thead}<tbody>${bodyRows}</tbody>`;
+  predictionTableSection.classList.remove("hidden");
+}
+
 async function loadColumns() {
   const res = await fetch("/api/columns");
   if (!res.ok) throw new Error("Failed to load columns");
@@ -119,8 +150,9 @@ async function generatePlot() {
   }
 
   plotImage.src = data.image;
-  plotImage.classList.remove("hidden");
+  plotContent.classList.remove("hidden");
   placeholder.classList.add("hidden");
+  renderPredictionTable(data.table);
   statusEl.textContent = `${data.meta.n_fit_points ?? data.meta.n_points} plotted (${data.meta.n_outliers_removed ?? 0} outliers excluded)`;
 
   if (data.meta.k !== undefined) {

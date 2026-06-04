@@ -117,6 +117,49 @@ def png_to_data_uri(png_bytes: bytes) -> str:
     return f"data:image/png;base64,{encoded}"
 
 
+def exponential_x_grid(x: np.ndarray, *, n_points: int = 12) -> np.ndarray:
+    """Evenly spaced points on a log scale from min(x) to max(x)."""
+    x_min = float(np.min(x))
+    x_max = float(np.max(x))
+    if x_min <= 0:
+        raise ValueError("x must be positive for an exponential grid")
+    if x_min == x_max:
+        return np.array([x_min], dtype=float)
+    n = max(2, int(n_points))
+    return np.geomspace(x_min, x_max, n, dtype=float)
+
+
+def build_fit_table(
+    x_in: np.ndarray,
+    fit_result: PiecewiseFitResult,
+    *,
+    x_label: str,
+    y_label: str,
+    n_points: int = 12,
+) -> dict[str, Any]:
+    """Table of x (geomspace over data range) and y from each fitted line."""
+    x_grid = exponential_x_grid(x_in, n_points=n_points)
+    lines = _sorted_lines(fit_result)
+    y_columns = [f"{y_label}_line_{j}" for j in range(1, len(lines) + 1)]
+    rows: list[dict[str, float]] = []
+    for x_val in x_grid:
+        row: dict[str, float] = {"x": float(x_val)}
+        for j, line in enumerate(lines, start=1):
+            row[y_columns[j - 1]] = float(
+                predict_line(line, x_val, fit_result.function_family)
+            )
+        rows.append(row)
+    return {
+        "x_col": x_label,
+        "y_col": y_label,
+        "x_min": float(x_in.min()),
+        "x_max": float(x_in.max()),
+        "n_points": int(len(x_grid)),
+        "y_columns": y_columns,
+        "rows": rows,
+    }
+
+
 def fit_for_plot(
     x: np.ndarray,
     y: np.ndarray,
@@ -195,6 +238,15 @@ def build_plot_response(
             }
         )
 
+    table = None
+    if fit_result is not None:
+        table = build_fit_table(
+            x_in,
+            fit_result,
+            x_label=x_label,
+            y_label=y_label,
+        )
+
     png = render_plot_png(
         x_in,
         y_in,
@@ -205,4 +257,4 @@ def build_plot_response(
         x_out=x_out if len(x_out) else None,
         y_out=y_out if len(y_out) else None,
     )
-    return {"image": png_to_data_uri(png), "meta": meta}
+    return {"image": png_to_data_uri(png), "meta": meta, "table": table}
